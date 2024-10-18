@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Homepage</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .nav-links a:hover {
+            background-color: white;
+            color: #333;
+        }
+
+        .slider {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .slide-text h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .slide-text p {
+            font-size: 1.5rem;
+        }
+
+        section {
+            padding: 4rem 2rem;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .about-us {
+            background-color: #f4f4f4;
+        }
+
+        .top-performers {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .performer {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1rem;
+            margin: 1rem;
+            width: calc(33.333% - 2rem);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .performer:hover {
+            transform: translateY(-5px);
+        }
+
+        .performer img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+        }
+
+        .service-process {
+            background-image: url('light-bulb-ideas-creative-diagram-concept_53876-92925.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .service-process h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-process p {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+
+        .process-steps {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .process-step {
+            flex-basis: 22%;
+            margin-bottom: 2rem;
+        }
+
+        .step-number {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .step-description {
+            font-size: 1.1rem;
+        }
+
+        .testimonials {
+            background-color: #f4f4f4;
+            position: relative;
+        }
+
+        .testimonial-container {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .testimonial-slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .testimonial {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin: 2rem;
+            min-width: calc(100% - 4rem);
+            box-sizing: border-box;
+        }
+
+        .testimonial p {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial .author {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .testimonial-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .testimonial-button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+        }
+
+        .testimonial-button:hover {
+            background-color: #555;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 2rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section {
+            flex: 1;
+            margin: 0 1rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style-type: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer-section ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+
+        @keyframes slide {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            33.33% { opacity: 1; }
+            53.33% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        .slide:nth-child(1) { animation: slide 12s infinite; }
+        .slide:nth-child(2) { animation: slide 12s infinite 4s; }
+        .slide:nth-child(3) { animation: slide 12s infinite 8s; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">R3DLIN3</div>
+            <div class="nav-links">
+                <a href="#">Home</a>
+                <a href="mentor.html">Mentors</a>
+                <a href="contact.html">Contact</a>
+                <a href="#">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="slider">
+        <div class="slide">
+            <img src="/sw-3.png" alt="Slide 1">
+            <div class="slide-text">
+                <h2>Welcome to Our Company</h2>
+                <p>Innovating for a better tomorrow</p>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="pexels-vincent-ma-janssen-3258243.jpg" alt="Slide 2">
+            <div class="slide-text">
+                <h2>Cutting-edge Solutions</h2>
+                <p>Transforming ideas into reality</p>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="sw-3.png" alt="Slide 3">
+            <div class="slide-text">
+                <h2>Join Our Team</h2>
+                <p>Be part of something great</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="about-us">
+        <h2>About Us</h2>
+        <p>We are a dynamic company dedicated to delivering innovative solutions to our clients. With years of experience and a team of experts, we strive to exceed expectations and drive success in every project we undertake.</p>
+    </section>
+
+    <section class="performers">
+        <h2>Top Performers</h2>
+        <div class="top-performers">
+            <div class="performer">
+                <img src="/placeholder.svg?height=100&width=100" alt="John Doe">
+                <h3>John Doe</h3>
+                <p>Sales Department</p>
+            </div>
+            <div class="performer">
+                <img src="/placeholder.svg?height=100&width=100" alt="Jane Smith">
+                <h3>Jane Smith</h3>
+                <p>Marketing Department</p>
+            </div>
+            <div class="performer">
+                <img src="/placeholder.svg?height=100&width=100" alt="Mike Johnson">
+                <h3>Mike Johnson</h3>
+                <p>Development Department</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="service-process">
+        <h2>SERVICE PROCESS</h2>
+        <p>easy and effective way to get your device repaired</p>
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <div class="step-description">SEND US AN ENQUIRY</div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <div class="step-description">WE WILL SCHEDULE A PICKUP</div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <div class="step-description">FAST FIX AND QUALITY ASSURED</div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">4</div>
+                <div class="step-description">DOORSTEP RETURN</div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="testimonials">
+        <h2>Testimonials</h2>
+        <div class="testimonial-container">
+            <div class="testimonial-slider">
+                <div class="testimonial">
+                    <p>"Working with this company has been an absolute pleasure. Their innovative solutions have transformed our business processes and increased our productivity tenfold."</p>
+                    <div class="author">- Sarah Thompson, CEO of XYZ Corp</div>
+                </div>
+                <div class="testimonial">
+                    <p>"The team's expertise and dedication to our project were outstanding. They delivered beyond our expectations and within the timeline."</p>
+                    <div class="author">- John Davis, CTO of ABC Inc.</div>
+                </div>
+                <div class="testimonial">
+                    <p>"I've never worked with a more professional and innovative team. They truly understand the needs of modern businesses."</p>
+                    <div class="author">- Emily Wilson, Founder of TechStart</div>
+                </div>
+            </div>
+            <div class="testimonial-buttons">
+                <button class="testimonial-button prev" id="prevTestimonial">Previous</button>
+                <button class="testimonial-button next" id="nextTestimonial">Next</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>123 Business Street</p>
+                <p>City, State 12345</p>
+                <p>Phone: (123) 456-7890</p>
+                <p>Email: info@yourcompany.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook">&#xf09a;</a>
+                    <a href="#" aria-label="Twitter">&#xf099;</a>
+                    <a href="#" aria-label="LinkedIn">&#xf0e1;</a>
+                    <a href="#" aria-label="Instagram">&#xf16d;</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slider = document.querySelector('.testimonial-slider');
+            const testimonials = document.querySelectorAll('.testimonial');
+            const prevButton = document.getElementById('prevTestimonial');
+            const nextButton = document.getElementById('nextTestimonial');
+            let currentIndex = 0;
+
+            function showTestimonial(index) {
+                slider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextTestimonial() {
+                currentIndex = (currentIndex + 1) % testimonials.length;
+                showTestimonial(currentIndex);
+            }
+
+            function prevTestimonial() {
+                currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+                showTestimonial(currentIndex);
+            }
+
+            nextButton.addEventListener('click', 
+
+ nextTestimonial);
+            prevButton.addEventListener('click', prevTestimonial);
+
+            // Auto-slide every 10 seconds
+            setInterval(nextTestimonial, 10000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLIET Mentorship Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>SLIET Mentorship Platform</h1>
+        <nav>
+            <ul>
+                <li><a href="#mentors">Mentors</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="mentors">
+            <h2>Available Mentors</h2>
+            <div id="mentor-list" class="mentor-cards"></div>
+        </section>
+
+        <section id="booking" class="booking-section">
+            <h2>Book a Session</h2>
+            <form id="booking-form">
+                <label for="mentor">Select Mentor:</label>
+                <select id="mentor" required></select>
+        
+                <label for="date">Select Date:</label>
+                <input type="date" id="date" required>
+        
+                <label for="time">Select Time:</label>
+                <input type="time" id="time" required>
+        
+                <button type="submit">Book Now</button>
+            </form>
+            <div id="booking-message"></div>
+        </section>
+        
+    </main>
+
+    <footer>
+        <p>&copy; 2024 SLIET Mentorship Program</p>
+    </footer>
+
+    <!-- Modal for Student Details -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Enter Your Details</h2>
+            <form id="student-details-form">
+                <label for="student-name">Name:</label>
+                <input type="text" id="student-name" required>
+                
+                <label for="student-email">Email:</label>
+                <input type="email" id="student-email" required>
+                
+                <button type="submit">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

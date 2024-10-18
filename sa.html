@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLIET Mentorship Platform</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+            --card-background: #fff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        h1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .faculty-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 2rem;
+        }
+
+        .faculty-card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .faculty-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .faculty-header {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .faculty-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+
+        .faculty-info h2 {
+            margin-bottom: 5px;
+        }
+
+        .faculty-info p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .faculty-content {
+            padding: 20px;
+        }
+
+        .expertise, .experience {
+            margin-bottom: 10px;
+        }
+
+        .slot-list {
+            list-style-type: none;
+            margin-top: 15px;
+        }
+
+        .slot-item {
+            background-color: var(--secondary-color);
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            transition: background-color 0.3s;
+        }
+
+        .slot-item:hover {
+            background-color: #27ae60;
+        }
+
+        .slot-item.booked {
+            background-color: #e74c3c;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: var(--card-background);
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+        }
+
+        #bookingForm {
+            margin-top: 20px;
+        }
+
+        #bookingForm label,
+        #bookingForm input,
+        #bookingForm button {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        #bookingForm input,
+        #bookingForm button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        #bookingForm button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #bookingForm button:hover {
+            background-color: #2980b9;
+        }
+
+        @media (max-width: 768px) {
+            .faculty-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SLIET Mentorship Platform</h1>
+        <p>Connect with expert faculty mentors for personalized guidance</p>
+    </header>
+
+    <div class="container">
+        <div id="facultyGrid" class="faculty-grid"></div>
+    </div>
+
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Book a Mentorship Session</h2>
+            <form id="bookingForm">
+                <label for="studentName">Your Name:</label>
+                <input type="text" id="studentName" required>
+                <label for="studentEmail">Your Email:</label>
+                <input type="email" id="studentEmail" required>
+                <label for="selectedMentor">Selected Mentor:</label>
+                <input type="text" id="selectedMentor" readonly>
+                <label for="selectedSlot">Selected Slot:</label>
+                <input type="text" id="selectedSlot" readonly>
+                <button type="submit">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const facultyProfiles = [
+            {
+                id: 1,
+                name: "Dr. Anita Sharma",
+                image: "/placeholder.svg?height=100&width=100",
+                expertise: "Machine Learning, Data Science",
+                experience: "10 years",
+                availableSlots: [
+                    { date: new Date(2023, 9, 20, 14, 0), booked: false },
+                    { date: new Date(2023, 9, 20, 15, 0), booked: false },
+                    { date: new Date(2023, 9, 21, 10, 0), booked: false },
+                ]
+            },
+            {
+                id: 2,
+                name: "Prof. Rajesh Kumar",
+                image: "/placeholder.svg?height=100&width=100",
+                expertise: "Software Engineering, Web Development",
+                experience: "15 years",
+                availableSlots: [
+                    { date: new Date(2023, 9, 20, 11, 0), booked: false },
+                    { date: new Date(2023, 9, 21, 14, 0), booked: false },
+                    { date: new Date(2023, 9, 22, 16, 0), booked: false },
+                ]
+            },
+            {
+                id: 3,
+                name: "Dr. Priya Gupta",
+                image: "/placeholder.svg?height=100&width=100",
+                expertise: "Artificial Intelligence, Natural Language Processing",
+                experience: "8 years",
+                availableSlots: [
+                    { date: new Date(2023, 9, 23, 10, 0), booked: false },
+                    { date: new Date(2023, 9, 23, 11, 0), booked: false },
+                    { date: new Date(2023, 9, 24, 15, 0), booked: false },
+                ]
+            },
+            {
+                id: 4,
+                name: "Prof. Amit Verma",
+                image: "/placeholder.svg?height=100&width=100",
+                expertise: "Computer Networks, Cybersecurity",
+                experience: "12 years",
+                availableSlots: [
+                    { date: new Date(2023, 9, 25, 14, 0), booked: false },
+                    { date: new Date(2023, 9, 26, 11, 0), booked: false },
+                    { date: new Date(2023, 9, 26, 16, 0), booked: false },
+                ]
+            }
+        ];
+
+        const facultyGrid = document.getElementById('facultyGrid');
+        const modal = document.getElementById('bookingModal');
+        const closeBtn = document.getElementsByClassName('close')[0];
+        const bookingForm = document.getElementById('bookingForm');
+        const selectedMentorInput = document.getElementById('selectedMentor');
+        const selectedSlotInput = document.getElementById('selectedSlot');
+        let currentMentor, currentSlot;
+
+        function renderFacultyProfiles() {
+            facultyGrid.innerHTML = '';
+            facultyProfiles.forEach(profile => {
+                const card = document.createElement('div');
+                card.className = 'faculty-card';
+                card.innerHTML = `
+                    <div class="faculty-header">
+                        <img src="${profile.image}" alt="${profile.name}" class="faculty-avatar">
+                        <div class="faculty-info">
+                            <h2>${profile.name}</h2>
+                            <p>${profile.expertise}</p>
+                        </div>
+                    </div>
+                    <div class="faculty-content">
+                        <p class="experience"><strong>Experience:</strong> ${profile.experience}</p>
+                        <h3>Available Slots:</h3>
+                        <ul class="slot-list">
+                            ${profile.availableSlots.map((slot, index) => `
+                                <li>
+                                    <button class="slot-item ${slot.booked ? 'booked' : ''}" 
+                                            data-mentor-id="${profile.id}" 
+                                            data-slot-index="${index}"
+                                            ${slot.booked ? 'disabled' : ''}>
+                                        ${slot.date.toLocaleString()} ${slot.booked ? '(Booked)' : ''}
+                                    </button>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+                facultyGrid.appendChild(card);
+            });
+        }
+
+        function openModal(mentorId, slotIndex) {
+            currentMentor = facultyProfiles.find(p => p.id === mentorId);
+            currentSlot = currentMentor.availableSlots[slotIndex];
+            selectedMentorInput.value = currentMentor.name;
+            selectedSlotInput.value = currentSlot.date.toLocaleString();
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            bookingForm.reset();
+        }
+
+        facultyGrid.addEventListener('click', (e) => {
+            if (e.target.classList.contains('slot-item') && !e.target.classList.contains('booked')) {
+                const mentorId = parseInt(e.target.getAttribute('data-mentor-id'));
+                const slotIndex = parseInt(e.target.getAttribute('data-slot-index'));
+                openModal(mentorId, slotIndex);
+            }
+        });
+
+        closeBtn.onclick = closeModal;
+
+        window.onclick = (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        };
+
+        bookingForm.onsubmit = (e) => {
+            e.preventDefault();
+            const studentName = document.getElementById('studentName').value;
+            const studentEmail = document.getElementById('studentEmail').value;
+            
+            currentSlot.booked = true;
+            currentSlot.bookedBy = { name: studentName, email: studentEmail };
+            
+            closeModal();
+            renderFacultyProfiles();
+            
+            alert(Booking confirmed!\n\nMentor: ${currentMentor.name}\nSlot: ${currentSlot.date.toLocaleString()}\nStudent: ${studentName}\nEmail: ${studentEmail});
+        };
+    
+
+        renderFacultyProfiles();
+    </script>
+</body>
+</html>
