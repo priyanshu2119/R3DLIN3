@@ -1,17 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
     const mentors = [
-        { name: "Dr. Birmohan Singh", subject: "Ph.D., M.E", availability: ["2024-10-19T10:00", "2024-10-19T14:00"],email:" birmohansingh@sliet.ac.in ", photo: "mentor/1.png" },
-        { name: "Dr. Damanpreet Singh", subject: "Ph.D., M.Tech, B.Tech.", availability: ["2024-10-19T12:00", "2024-10-19T15:00"],email:"  birmohansingh@sliet.ac.in ", photo: "mentor/2.png" },
+        { name: "Dr. Birmohan Singh", subject: "Ph.D., M.E", availability: ["2024-10-19T10:00", "2024-10-19T14:00"], email: "birmohansingh@sliet.ac.in", photo: "mentor/tanish.jpg" },
+        { name: "Dr. Damanpreet Singh", subject: "Ph.D., M.Tech, B.Tech.", availability: ["2024-10-19T12:00", "2024-10-19T15:00"], email: "birmohansingh@sliet.ac.in", photo: "mentor/tanish.jpg" },
+        { name: "Dr. Manminder Singh", subject: "Ph. D in CSE ,B.Tech,M.Tech", availability: ["2024-10-19T11:00", "2024-10-19T13:00"], email: "manminderldh@gmail.com", photo: "mentor/tanish.jpg" },
+        { name: "Dr. Preetpal Kaur Buttar", subject: "PhD (Computer Science & Engineering)", availability: ["2024-10-19T11:00", "2024-10-19T13:00"], email: "preetpal@sliet.ac.in", photo: "mentor/tanish.jpg" },
+        { name: "Dr. Amar Nath", subject: "Ph.D. in CSE,M.Tech. in CSE ,B.Tech.", availability: ["2024-10-19T11:00", "2024-10-19T13:00"], email: "amarnath@sliet.ac.in", photo: "mentor/tanish.jpg" },
+        { name: "Dr. Damanpreet Singh", subject: "Ph.D., M.Tech, B.Tech.", availability: ["2024-10-19T12:00", "2024-10-19T15:00"], email: "birmohansingh@sliet.ac.in", photo: "mentor/tanish.jpg" },
 
-        //ast prof
-        { name: "Dr. Manminder Singh", subject: "Ph. D in CSE ,B.Tech,M.Tech ", availability: ["2024-10-19T11:00", "2024-10-19T13:00"], email:"manminderldh@gmail.com", photo: "mentor/3.png" },
-        { name: "Dr. Preetpal Kaur Buttar", subject: "PhD (Computer Science & Engineering)", availability: ["2024-10-19T11:00", "2024-10-19T13:00"], email:"preetpal@sliet.ac.in", photo: "mentor/4.png" },
-        { name: "Dr. Amar Nath", subject: "Ph.D. in CSE,M.Tech. in CSE ,B.Tech.", availability: ["2024-10-19T11:00", "2024-10-19T13:00"], email:"amarnath@sliet.ac.in", photo: "mentor/5.png" },
-        { name: "Sukhpreet Singh", subject: "B.Tech M.Tech Ph.D (Pursuing)", availability: ["2024-10-19T12:00", "2024-10-19T15:00"],email:"  sukhpreet.manshahia@gmail.com", photo: "mentor/6.png" },
     ];
 
     const mentorList = document.getElementById('mentor-list');
-    const mentorSelect = document.getElementById('mentor');
     const bookingMessage = document.getElementById('booking-message');
     const modal = document.getElementById('modal');
     const studentDetailsForm = document.getElementById('student-details-form');
@@ -24,12 +22,12 @@ document.addEventListener("DOMContentLoaded", () => {
     mentors.forEach(mentor => {
         const mentorCard = document.createElement('div');
         mentorCard.classList.add('mentor-card');
-        
+
         mentorCard.innerHTML = `
             <div class="mentor-info">
+            <img src="${mentor.photo}" alt="${mentor.name}'s Photo" class="mentor-photo">
                 <h3>${mentor.name}</h3>
                 <p><strong>Qualification:</strong> ${mentor.subject}</p>
-                
                 <p><strong>E-mail:</strong> ${mentor.email}</p>
                 <p><strong>Available Times:</strong></p>
                 <ul>
@@ -39,19 +37,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         </li>
                     `).join('')}
                 </ul>
-                 
             </div>
-            <img src="${mentor.photo}" alt="${mentor.name}'s Photo" class="mentor-photo">
+            
         `;
-        
-        mentorList.appendChild(mentorCard);
 
-        const option = document.createElement('option');
-        option.value = mentor.name;
-        option.textContent = mentor.name;
-        mentorSelect.appendChild(option);
+        mentorList.appendChild(mentorCard);
     });
-    
 
     // Handle clicking on time slots
     mentorList.addEventListener('click', (event) => {
@@ -78,8 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const studentName = studentNameInput.value;
         const studentEmail = studentEmailInput.value;
 
-        //bookingMessage.textContent = `You have successfully booked a session with ${selectedMentor} on ${new Date(selectedDateTime).toLocaleString()}.\nStudent Name: ${studentName}\nStudent Email: ${studentEmail}`;
-        alert(bookingMessage.textContent = `You have successfully booked a session with ${selectedMentor} on ${new Date(selectedDateTime).toLocaleString()}.`);
+        alert(`You have successfully booked a session with ${selectedMentor} on ${new Date(selectedDateTime).toLocaleString()}.`);
         bookingMessage.style.color = 'green';
 
         // Reset the form and close the modal
@@ -87,8 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.style.display = "none";
     });
 
-    // Handle booking form submission
-    const bookingForm = document.getElementById('booking-form');
     bookingForm.addEventListener('submit', (event) => {
         event.preventDefault();
         const selectedDate = dateInput.value;
